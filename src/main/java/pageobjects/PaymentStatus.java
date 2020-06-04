@@ -3,10 +3,8 @@
  */
 package pageobjects;
 
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
 import setup.WebSetup;
 
 /**
@@ -15,36 +13,56 @@ import setup.WebSetup;
  */
 public class PaymentStatus {
 	
-	public void assertTransactionStatus() {
+	public PaymentStatus() {
 		
-		OrderSummary ordersummary = new OrderSummary();
-		ordersummary.switchToOrderSummaryFrame();
+		switchToCreditCardFrame();
+	}
+	
+	public void switchToCreditCardFrame() {
 		
-		Assert.assertTrue("*** Transaction message NOT displayed", paymentStatus().isDisplayed());
-		System.out.println("Transsaction status message :" +paymentStatusMessage());
+		WebSetup.driver.switchTo().frame(creditCardFrame());
+		System.out.println("*** Switched to Credit card payment status iFrame");
 	}
 
-	public void refreshPage() {
+	// Method to Retry transaction on failure or complete same in case Successful
+	public void paymentStatusAction() {
 		
-		if (paymentStatusMessage().contains("RETRY"))
-		{
-			System.out.println("Payment status button displayed to :"+paymentStatusMessage());
-			WebSetup.getDriver().navigate().refresh();
+		if (paymentStatusBottomText().contains("retry"))
+		{	
+			// Navigating back to Retry transaction
+			paymentStatusButton().click();
+			
+			// Refreshing page for another transaction
+			WebSetup.driver.navigate().refresh();
 		}
 		else {
-			paymentStatus().click();
+			
+			// To click on 'DONE' button when transaction status SUCCESSFUL
+			paymentStatusButton().click();
 		}
+	}
+
+	// ******** Element locators listed below for the Credit card payment status - used by methods above ********
+		private WebElement creditCardFrame() {
+			
+			return WebSetup.driver.findElement(By.id("snap-midtrans"));
+		}
+	
+	private WebElement paymentStatusButton() {
+		
+		return WebSetup.driver.findElement(By.xpath("//a[@class='button-main-content']"));
 	}
 	
 	private WebElement paymentStatus() {
-
-		return WebSetup.getDriver().findElement(By.xpath("//a[@class='button-main-content']//span"));
+		
+		return WebSetup.driver.findElement(By.xpath("//*[@class='bottom']//div"));
 	}
 	
-	private String paymentStatusMessage() {
+	private String paymentStatusBottomText() {
 
-		return paymentStatus().getText();
+		String message =  paymentStatus().getText();
+		System.out.println("Transsaction status message :" +message);
+		
+		return message;
 	}
-	
-	
 }

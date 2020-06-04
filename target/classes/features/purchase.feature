@@ -1,6 +1,6 @@
 @Purchase
 Feature: Purchase a pillow
-Description: The feature should implement valid and invalid scenarios qhile buying a pillow.
+Description: The feature should implement valid and invalid scenarios while buying a pillow.
 
 Background: 
 Given User adds pillow to the cart

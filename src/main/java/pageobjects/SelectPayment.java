@@ -22,7 +22,7 @@ public class SelectPayment {
 
 	public void assertSelectPaymentDisplayed() {
 		
-		Assert.assertTrue("*** Select CreditCardPayment popup is not displayed", selectPaymentPopup().isDisplayed());
+		Assert.assertTrue("*** Select Credit Card Payment not displayed", selectPaymentPop().isDisplayed());
 	}
 
 	public void isCreditCardOptionDisplayed() {
@@ -37,13 +37,13 @@ public class SelectPayment {
 	}
 
 	// ******** Element locators listed below for the SELECT PAYMENT TYPE - are used by methods above ********
-	private WebElement selectPaymentPopup() {
+	private WebElement selectPaymentPop() {
 
-		return WebSetup.getDriver().findElement(By.id("payment-list"));
+		return WebSetup.driver.findElement(By.id("payment-list"));
 	}
 
 	private WebElement creditCardOption() {
 
-		return WebSetup.getDriver().findElement(By.xpath("//a[@href='#/credit-card']"));
+		return WebSetup.driver.findElement(By.xpath("//a[@href='#/credit-card']"));
 	}
 }

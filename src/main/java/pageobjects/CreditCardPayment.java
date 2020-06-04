@@ -5,8 +5,10 @@ package pageobjects;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import cucumber.api.java.it.Date;
 import setup.WebSetup;
 
 /**
@@ -24,7 +26,7 @@ public class CreditCardPayment {
 
 		Assert.assertTrue("*** Credit Card input fields NOT displayed", creditCardPaymentTitle().isDisplayed());
 		
-		System.out.println(creditCardPaymentTitle().getText());
+		System.out.println("User On :"+creditCardPaymentTitle().getText());
 	}
 
 	public void isImportantMessageDisaplyed() {
@@ -34,24 +36,11 @@ public class CreditCardPayment {
 		System.out.println("Message displayed as :: " + importantMessage().getText());
 	}
 
-	// Method to verify if amount payable on credit card popup is correct
-	public void assertAmountPayable() {
-
-		Assert.assertTrue("*** Amount Payable on Credit card popup not displayed",
-				amountPayableOnCreditCardPopup().isDisplayed());
-
-		HomePage.finalAmountPayable = Integer.parseInt(amountPayableOnCreditCardPopup().getText());
-		System.out.println("Final amount payable Credit Card Popup:" + HomePage.finalAmountPayable);
-
-		Assert.assertEquals("*** Final payable amount on Credit card popup is not same as Order Summary",
-				HomePage.finalAmountPayable, HomePage.orderSummaryAmount);
-	}
-
 	public void enterCardDetails(String cardNumber, String expDate, int cvv) {
 
-		enterCreditCardNumber(cardNumber);
-		enterCreditCardExpiryDate(expDate);
-		enterCreditCardCVV(cvv);
+		enterCardDetails(cardNumber);
+		enterCardExpiryDate(expDate);
+		enterCardDetails(cvv);
 	}
 
 	public void clickPayNowButton() {
@@ -61,17 +50,26 @@ public class CreditCardPayment {
 		payNowButton().click();
 	}
 	
-	public void assertInvalidCardMessage() {
-
-		Assert.assertTrue("*** Invalid card details message NOT displayed", 
-				invalidCardDetailsMessage().isDisplayed());
-
-		System.out.println("Message displayed on entering card number : "+invalidCardDetailsMessage().getText());
+	public void invalidCardMessage() throws NoSuchElementException {
+		
+		try {
+			if(invalidCardDetailsMessage().isDisplayed())
+			{
+				System.out.println("Message displayed on entering card number : "+invalidCardDetailsMessage().getText());
+				System.out.println("Invalid card details - navigating to Home page");
+				WebSetup.driver.navigate().refresh();
+			}
+			else {
+				System.out.println("Invalid card details message NOT displayed");
+			}
+		}catch(NoSuchElementException nse) {
+			System.out.println("Element does not always appear, hence continue.");
+		}
 	}
 
-	private void enterCreditCardNumber(String string) {
+	private void enterCardDetails(String string) {
 
-		Assert.assertTrue("*** Credit card number field not displayed on CreditCardPayment popup",
+		Assert.assertTrue("*** Credit card number field not displayed",
 				creditCardNumberInputField().isDisplayed());
 
 		// Steps for entering credit card number
@@ -83,9 +81,9 @@ public class CreditCardPayment {
 				creditCardNumberValidation().isDisplayed());
 	}
 
-	private void enterCreditCardExpiryDate(String expiryDate) {
+	private void enterCardExpiryDate(String expiryDate) {
 
-		Assert.assertTrue("*** Credit card Expiry Date field not displayed on CreditCardPayment popup",
+		Assert.assertTrue("*** Credit card Expiry Date field not displayed",
 				creditCardExpiryDateInputField().isDisplayed());
 
 		// Steps for entering credit card Expiry Date
@@ -94,9 +92,9 @@ public class CreditCardPayment {
 		creditCardExpiryDateInputField().sendKeys(String.valueOf(expiryDate));
 	}
 
-	private void enterCreditCardCVV(int cvv) {
+	private void enterCardDetails(int cvv) {
 
-		Assert.assertTrue("*** Credit card CVV field not displayed on CreditCardPayment popup",
+		Assert.assertTrue("*** Credit card CVV field not displayed",
 				creditCardCVVInputField().isDisplayed());
 
 		// Steps for entering credit card CVV
@@ -109,47 +107,42 @@ public class CreditCardPayment {
 	// used by methods above ********
 	private WebElement creditCardPaymentTitle() {
 
-		return WebSetup.getDriver().findElement(By.xpath("//*[@class='text-page-title-content']"));
+		return WebSetup.driver.findElement(By.xpath("//*[@class='text-page-title-content']"));
 	}
 
 	private WebElement importantMessage() {
 
-		return WebSetup.getDriver().findElement(By.xpath("//*[@class='pop']"));
-	}
-
-	private WebElement amountPayableOnCreditCardPopup() {
-
-		return WebSetup.getDriver().findElement(By.xpath("//*[@class='text-amount-amount']"));
+		return WebSetup.driver.findElement(By.xpath("//*[@class='pop']"));
 	}
 
 	private WebElement creditCardNumberInputField() {
 
-		return WebSetup.getDriver().findElement(By.name("cardnumber"));
+		return WebSetup.driver.findElement(By.name("cardnumber"));
 	}
 
 	private WebElement creditCardNumberValidation() {
 
-		return WebSetup.getDriver().findElement(By.xpath("//*[@class='validation']"));
+		return WebSetup.driver.findElement(By.xpath("//*[@class='validation']"));
 	}
 
 	private WebElement creditCardExpiryDateInputField() {
 
-		return WebSetup.getDriver().findElement(By.xpath("//input[@placeholder='MM / YY']"));
+		return WebSetup.driver.findElement(By.xpath("//input[@placeholder='MM / YY']"));
 	}
 
 	private WebElement creditCardCVVInputField() {
 
-		return WebSetup.getDriver().findElement(By.xpath("//input[@placeholder='123']"));
+		return WebSetup.driver.findElement(By.xpath("//input[@placeholder='123']"));
 	}
 
 	private WebElement payNowButton() {
 
-		return WebSetup.getDriver().findElement(By.xpath("//*[@class='button-main-content']"));
+		return WebSetup.driver.findElement(By.xpath("//*[@class='button-main-content']"));
 	}
 	
 	private WebElement invalidCardDetailsMessage() {
 
-		return WebSetup.getDriver().findElement(By.xpath("//*[@class='notice danger']//span"));
+		return WebSetup.driver.findElement(By.xpath("//*[@class='notice danger']//span"));
 	}
 
 }

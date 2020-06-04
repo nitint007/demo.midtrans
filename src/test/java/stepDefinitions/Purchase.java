@@ -10,6 +10,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import cucumber.api.Scenario;
 
 import pageobjects.BankDetails;
 import pageobjects.CartPanel;
@@ -29,7 +30,7 @@ public class Purchase {
 	//************** Cucumber Hooks @Before - to execute a suite precondition **************
 	
 	@Before
-	public void beforeAllScenarios()  {
+	public void beforeAllScenarios(Scenario s)  {
 		System.out.println("Inside Hooks @Before");
 		WebSetup.setUp();
 	}
@@ -40,7 +41,7 @@ public class Purchase {
 		public void closeDriverInstance() {
 			
 			// To close webdriver session
-			WebSetup.getDriver().quit();
+			WebSetup.driver.quit();
 		}
 	
 	//************** @Given - implementation details **************
@@ -48,6 +49,7 @@ public class Purchase {
 	// Method that is common and a pre-condition for scenarios
 	@Given("^User adds pillow to the cart$")
 	public void itemAddedToCart() throws Throwable {
+		
 		// Creating Page object for accessing respective methods
 		HomePage homepage = new HomePage();
 		
@@ -55,11 +57,9 @@ public class Purchase {
 		homepage.clickBuyNowButton();
 		
 		CartPanel cartPanel = new CartPanel();
-//		cartPanel.isCartInfoCorrect();
 		cartPanel.clickCheckoutButton();
 		
 		OrderSummary ordersummary = new OrderSummary();
-//		ordersummary.verifyOrderSummaryAmount();
 		ordersummary.clickContinue();
 	}
 
@@ -68,12 +68,12 @@ public class Purchase {
 	// Method for entering valid details for purchase
 	@When("^Entered valid details$")
 	public void enterValidDetails() throws Throwable {
+		
 		// Payment details for Credit card
 	    SelectPayment selectpayment = new SelectPayment();
 	    selectpayment.selectCreditCardOption();
 	    
 	    CreditCardPayment payment = new CreditCardPayment();
-//	    payment.assertAmountPayable();
 	    
 	    //TODO - do not hardcode
 	    payment.enterCardDetails("4811111111111114", "06/20", 123);
@@ -84,6 +84,7 @@ public class Purchase {
 	// Method for entering invalid details for purchase
 	@When("^Entered invalid details (\\d+)$")
 	public void enterInvalidDetails(String cardNumber) throws Throwable {
+		
 		// Payment details for Credit card
 	    SelectPayment selectpayment = new SelectPayment();
 	    selectpayment.selectCreditCardOption();
@@ -93,6 +94,7 @@ public class Purchase {
 	    payment.enterCardDetails(cardNumber, "06/20", 123);
 	    payment.isImportantMessageDisaplyed();
 	    payment.clickPayNowButton();
+	    payment.invalidCardMessage();
 	}
 	
 	//************** @Then - implementation details **************
@@ -104,7 +106,7 @@ public class Purchase {
 		bankdetails.enterOTP("112233");
 		
 		PaymentStatus paymentstatus = new PaymentStatus();
-		paymentstatus.assertTransactionStatus();
+		paymentstatus.paymentStatusAction();
 		
 	    HomePage homepage = new HomePage();
 	    homepage.verifySuccessMessage();
@@ -117,7 +119,6 @@ public class Purchase {
 		bankdetails.enterOTP("112233");
 		
 		PaymentStatus paymentstatus = new PaymentStatus();
-		paymentstatus.assertTransactionStatus();
-		paymentstatus.refreshPage();
+		paymentstatus.paymentStatusAction();
 	}
 }

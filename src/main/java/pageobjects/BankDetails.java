@@ -25,7 +25,7 @@ public class BankDetails {
 	public void goToIssuingBankFrame() {
 		
 		try {
-			WebSetup.getDriver().switchTo().frame(issuingBankiFrame());
+			WebSetup.driver.switchTo().frame(issuingBankiFrame());
 			System.out.println("*** Switched to Issuing Bank iFrame");
 		} catch (NoSuchWindowException nswe) {
 		}
@@ -42,7 +42,7 @@ public class BankDetails {
 		// Submitting Bank OTP
 		enterOTPField().submit();
 
-		WebSetup.getDriver().switchTo().defaultContent();
+		WebSetup.driver.switchTo().defaultContent();
 		System.out.println("Switched to Default content");
 	}
 
@@ -51,15 +51,12 @@ public class BankDetails {
 	private WebElement enterOTPField() throws InterruptedException {
 
 		Thread.sleep(10000);
-//		WebElement otpField = WebSetup.wait
-//				.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@type='password']")));
-
-		return WebSetup.getDriver().findElement(By.xpath("//input[@type='password']"));
+		return WebSetup.driver.findElement(By.xpath("//input[@type='password']"));
 	}
 
 	private WebElement issuingBankiFrame() {
 	
-		return WebSetup.getDriver().findElement(By.xpath("//*[@class='main-container']//iframe"));
+		return WebSetup.driver.findElement(By.xpath("//*[@class='main-container']//iframe"));
 	}
 
 }
