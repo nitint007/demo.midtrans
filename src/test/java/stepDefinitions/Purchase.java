@@ -3,9 +3,22 @@
  */
 package stepDefinitions;
 
+import org.junit.AfterClass;
+
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+
+import pageobjects.BankDetails;
+import pageobjects.CartPanel;
+import pageobjects.CreditCardPayment;
+import pageobjects.HomePage;
+import pageobjects.OrderSummary;
+import pageobjects.PaymentStatus;
+import pageobjects.SelectPayment;
+import setup.WebSetup;
 
 /**
  * @author nitinthite
@@ -13,29 +26,98 @@ import cucumber.api.java.en.When;
  */
 public class Purchase {
 	
-	@Given("^user adds pillow to the cart$")
-	public void user_adds_pillow_to_the_cart() throws Throwable {
-	   System.out.println("I am in step Defs");
+	//************** Cucumber Hooks @Before - to execute a suite precondition **************
+	
+	@Before
+	public void beforeAllScenarios()  {
+		System.out.println("Inside Hooks @Before");
+		WebSetup.setUp();
+	}
+	
+	//************** Junit Hook @After - to execute a common closure code **************
+	
+		@AfterClass
+		public void closeDriverInstance() {
+			
+			// To close webdriver session
+			WebSetup.getDriver().quit();
+		}
+	
+	//************** @Given - implementation details **************
+	
+	// Method that is common and a pre-condition for scenarios
+	@Given("^User adds pillow to the cart$")
+	public void itemAddedToCart() throws Throwable {
+		// Creating Page object for accessing respective methods
+		HomePage homepage = new HomePage();
+		
+		// Steps for adding item to cart and verifying same
+		homepage.clickBuyNowButton();
+		
+		CartPanel cartPanel = new CartPanel();
+//		cartPanel.isCartInfoCorrect();
+		cartPanel.clickCheckoutButton();
+		
+		OrderSummary ordersummary = new OrderSummary();
+//		ordersummary.verifyOrderSummaryAmount();
+		ordersummary.clickContinue();
 	}
 
-	@When("^entered valid details$")
-	public void entered_valid_details() throws Throwable {
+	//************** @When - implementation details **************
+	
+	// Method for entering valid details for purchase
+	@When("^Entered valid details$")
+	public void enterValidDetails() throws Throwable {
+		// Payment details for Credit card
+	    SelectPayment selectpayment = new SelectPayment();
+	    selectpayment.selectCreditCardOption();
 	    
-	}
-
-	@Then("^purchase should be successful$")
-	public void purchase_should_be_successful() throws Throwable {
+	    CreditCardPayment payment = new CreditCardPayment();
+//	    payment.assertAmountPayable();
 	    
+	    //TODO - do not hardcode
+	    payment.enterCardDetails("4811111111111114", "06/20", 123);
+	    payment.isImportantMessageDisaplyed();
+	    payment.clickPayNowButton();
+	}
+	
+	// Method for entering invalid details for purchase
+	@When("^Entered invalid details (\\d+)$")
+	public void enterInvalidDetails(String cardNumber) throws Throwable {
+		// Payment details for Credit card
+	    SelectPayment selectpayment = new SelectPayment();
+	    selectpayment.selectCreditCardOption();
+	    
+	    CreditCardPayment payment = new CreditCardPayment();
+	    //TODO - do not hardcode
+	    payment.enterCardDetails(cardNumber, "06/20", 123);
+	    payment.isImportantMessageDisaplyed();
+	    payment.clickPayNowButton();
+	}
+	
+	//************** @Then - implementation details **************
+
+	// Method to verify results on valid entries
+	@Then("^Purchase should be successful$")
+	public void purchaseSuccess() throws Throwable {
+		BankDetails bankdetails = new BankDetails();
+		bankdetails.enterOTP("112233");
+		
+		PaymentStatus paymentstatus = new PaymentStatus();
+		paymentstatus.assertTransactionStatus();
+		
+	    HomePage homepage = new HomePage();
+	    homepage.verifySuccessMessage();
 	}
 
-	@When("^entered invalid details \"([^\"]*)\"$")
-	public void entered_invalid_details(String arg1) throws Throwable {
-	   
+	// Method to verify results on invalid entries
+	@Then("^Purchase should be un-successful$")
+	public void purchaseFailed() throws Throwable {
+		BankDetails bankdetails = new BankDetails();
+		bankdetails.enterOTP("112233");
+		
+		PaymentStatus paymentstatus = new PaymentStatus();
+		paymentstatus.assertTransactionStatus();
+		paymentstatus.refreshPage();
 	}
-
-	@Then("^purchase should be un-successful$")
-	public void purchase_should_be_un_successful() throws Throwable {
-	   
-	}
-
 }
