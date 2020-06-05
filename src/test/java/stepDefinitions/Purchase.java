@@ -3,6 +3,9 @@
  */
 package stepDefinitions;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.junit.AfterClass;
 
 import cucumber.api.java.After;
@@ -25,14 +28,29 @@ import setup.WebSetup;
  * @author nitinthite
  *
  */
-public class Purchase {
+public class Purchase extends WebSetup{
+	
+	HomePage homepage;
+	CartPanel cartPanel;
+	OrderSummary ordersummary;
+	SelectPayment selectpayment;
+	BankDetails bankdetails;
+	PaymentStatus paymentstatus;
+	CreditCardPayment payment;
+	
+	// Class constructor to initialising same properties as parent constructor
+	public Purchase() throws FileNotFoundException, IOException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
 	
 	//************** Cucumber Hooks @Before - to execute a suite precondition **************
 	
 	@Before
 	public void beforeAllScenarios(Scenario s)  {
 		System.out.println("Inside Hooks @Before");
-		WebSetup.setUp();
+		setUp();
 	}
 	
 	//************** Junit Hook @After - to execute a common closure code **************
@@ -41,7 +59,7 @@ public class Purchase {
 		public void closeDriverInstance() {
 			
 			// To close webdriver session
-			WebSetup.driver.quit();
+			driver.quit();
 		}
 	
 	//************** @Given - implementation details **************
@@ -51,15 +69,15 @@ public class Purchase {
 	public void itemAddedToCart() throws Throwable {
 		
 		// Creating Page object for accessing respective methods
-		HomePage homepage = new HomePage();
+		homepage = new HomePage();
 		
 		// Steps for adding item to cart and verifying same
 		homepage.clickBuyNowButton();
 		
-		CartPanel cartPanel = new CartPanel();
+		cartPanel = new CartPanel();
 		cartPanel.clickCheckoutButton();
 		
-		OrderSummary ordersummary = new OrderSummary();
+		ordersummary = new OrderSummary();
 		ordersummary.clickContinue();
 	}
 
@@ -70,14 +88,15 @@ public class Purchase {
 	public void enterValidDetails() throws Throwable {
 		
 		// Payment details for Credit card
-	    SelectPayment selectpayment = new SelectPayment();
+	    selectpayment = new SelectPayment();
 	    selectpayment.selectCreditCardOption();
 	    
-	    CreditCardPayment payment = new CreditCardPayment();
+	    payment = new CreditCardPayment();
 	    
 	    //TODO - do not hardcode
-	    payment.enterCardDetails("4811111111111114", "06/20", 123);
-	    payment.isImportantMessageDisaplyed();
+	    payment.enterCardDetails(properties.getProperty("validCardNumber"), 
+	    		properties.getProperty("expiryDate"), properties.getProperty("cvv"));
+	    payment.importantMessageDisaplyed();
 	    payment.clickPayNowButton();
 	}
 	
@@ -86,15 +105,14 @@ public class Purchase {
 	public void enterInvalidDetails(String cardNumber) throws Throwable {
 		
 		// Payment details for Credit card
-	    SelectPayment selectpayment = new SelectPayment();
+	    selectpayment = new SelectPayment();
 	    selectpayment.selectCreditCardOption();
 	    
-	    CreditCardPayment payment = new CreditCardPayment();
-	    //TODO - do not hardcode
-	    payment.enterCardDetails(cardNumber, "06/20", 123);
-	    payment.isImportantMessageDisaplyed();
+	    payment = new CreditCardPayment();
+	    payment.enterCardDetails(cardNumber, properties.getProperty("expiryDate"), 
+	    		properties.getProperty("cvv"));
+	    payment.importantMessageDisaplyed();
 	    payment.clickPayNowButton();
-	    payment.invalidCardMessage();
 	}
 	
 	//************** @Then - implementation details **************
@@ -102,23 +120,22 @@ public class Purchase {
 	// Method to verify results on valid entries
 	@Then("^Purchase should be successful$")
 	public void purchaseSuccess() throws Throwable {
-		BankDetails bankdetails = new BankDetails();
-		bankdetails.enterOTP("112233");
 		
-		PaymentStatus paymentstatus = new PaymentStatus();
-		paymentstatus.paymentStatusAction();
+		//TODO remove hard coded
+		bankdetails = new BankDetails();
+		bankdetails.enterOTP(properties.getProperty("otp"));
 		
-	    HomePage homepage = new HomePage();
+	    homepage = new HomePage();
 	    homepage.verifySuccessMessage();
 	}
 
 	// Method to verify results on invalid entries
 	@Then("^Purchase should be un-successful$")
 	public void purchaseFailed() throws Throwable {
-		BankDetails bankdetails = new BankDetails();
-		bankdetails.enterOTP("112233");
+		bankdetails = new BankDetails();
+		bankdetails.enterOTP(properties.getProperty("otp"));
 		
-		PaymentStatus paymentstatus = new PaymentStatus();
+		paymentstatus = new PaymentStatus();
 		paymentstatus.paymentStatusAction();
 	}
 }

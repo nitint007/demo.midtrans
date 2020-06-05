@@ -3,15 +3,17 @@
  */
 package setup;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.AfterClass;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import cucumber.api.Scenario;
 
 /**
  * @author nitinthite
@@ -22,31 +24,64 @@ public class WebSetup {
 	// Webdriver instance for easy access
 	public static WebDriver driver;
 	public static WebDriverWait wait;
+	public static Properties properties;
 	
 	
 	//Target website url for test that is fixed
-	private static final String BASEURL = "https://demo.midtrans.com/";
+//	private static final String BASEURL = "https://demo.midtrans.com/";
+	
+	public WebSetup() throws FileNotFoundException, IOException {
+		BufferedReader reader;
+		try {
+			String configFilePath = "./src/test/resources/testDataResources/Data.properties";
+			reader = new BufferedReader(new FileReader(configFilePath));
+			properties = new Properties();
+			properties.load(reader);
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
+			throw new RuntimeException("File Data.properties not found at given path.");
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw new RuntimeException("Issue on reading file.");
+		}
+	}
 
 	/*
 	 * Method details out configuration for chrome browser
 	 */
-	public static WebDriver setUp() {
+	public WebDriver setUp() {
+		
+		String browserName = properties.getProperty("browserName");
 		
 		if (driver == null ) {
 			
 			System.out.println("Setup method call");
 			
-			// To create new instance of chrome driver
-			driver = new ChromeDriver();
+			if (browserName.equals("chrome")) {
+				
+				// Initialising chrome driver
+				driver = new ChromeDriver();
+			}
+			else if (browserName.equals("firefox")) {
+				
+				// Initialising firefox driver driver
+				driver = new FirefoxDriver();
+			}
 			
 			// To maximise the browser
-			driver.manage().window().maximize(); 
+			driver.manage().window().maximize();
 			
-			// To open the URL in browser window
-			driver.get(BASEURL);
+			// Deleting all cookies
+			driver.manage().deleteAllCookies();
+			
+			// Maximum time for wait for page to load to timeout
+			driver.manage().timeouts().pageLoadTimeout(65, TimeUnit.SECONDS);
 			
 			// Describing default wait time for each element in tests
-			driver.manage().timeouts().implicitlyWait(60,TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+			
+			// To open the URL in browser window
+			driver.get(properties.getProperty("url"));
 		}
 		return driver;
 	}

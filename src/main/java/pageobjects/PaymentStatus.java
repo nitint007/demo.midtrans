@@ -3,6 +3,9 @@
  */
 package pageobjects;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import setup.WebSetup;
@@ -11,51 +14,48 @@ import setup.WebSetup;
  * @author nitinthite
  *
  */
-public class PaymentStatus {
+public class PaymentStatus extends WebSetup {
 	
-	public PaymentStatus() {
+	// Class constructor to initialising same properties as parent constructor
+	public PaymentStatus() throws FileNotFoundException, IOException {
 		
+		super();
 		switchToCreditCardFrame();
 	}
 	
+	// To switch driver handle on frame for further operations
 	public void switchToCreditCardFrame() {
 		
-		WebSetup.driver.switchTo().frame(creditCardFrame());
+		driver.switchTo().frame(creditCardFrame());
 		System.out.println("*** Switched to Credit card payment status iFrame");
 	}
 
 	// Method to Retry transaction on failure or complete same in case Successful
 	public void paymentStatusAction() {
 		
-		if (paymentStatusBottomText().contains("retry"))
-		{	
-			// Navigating back to Retry transaction
-			paymentStatusButton().click();
-			
-			// Refreshing page for another transaction
-			WebSetup.driver.navigate().refresh();
-		}
-		else {
-			
-			// To click on 'DONE' button when transaction status SUCCESSFUL
-			paymentStatusButton().click();
-		}
+		paymentStatusButton().click();
+		driver.navigate().refresh();
 	}
 
 	// ******** Element locators listed below for the Credit card payment status - used by methods above ********
-		private WebElement creditCardFrame() {
+	private WebElement creditCardFrame() {
 			
-			return WebSetup.driver.findElement(By.id("snap-midtrans"));
-		}
+			return driver.findElement(By.id("snap-midtrans"));
+	}
+	
+	private WebElement creditCardStatus() {
+		
+		return driver.findElement(By.id("//*[@class='main-container']//span"));
+}
 	
 	private WebElement paymentStatusButton() {
 		
-		return WebSetup.driver.findElement(By.xpath("//a[@class='button-main-content']"));
+		return driver.findElement(By.xpath("//a[@class='button-main-content']"));
 	}
 	
 	private WebElement paymentStatus() {
 		
-		return WebSetup.driver.findElement(By.xpath("//*[@class='bottom']//div"));
+		return driver.findElement(By.xpath("//*[@class='bottom']//div"));
 	}
 	
 	private String paymentStatusBottomText() {

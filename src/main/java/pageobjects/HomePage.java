@@ -3,10 +3,14 @@
  */
 package pageobjects;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 import setup.WebSetup;
 
@@ -14,21 +18,27 @@ import setup.WebSetup;
  * @author nitinthite
  * Class contains element locators and respective methods of from HomePage
  */
-public class HomePage {
-	
-	public HomePage() {
+public class HomePage extends WebSetup{
+		
+	// Class custom constructor
+	public HomePage() throws FileNotFoundException, IOException {
+		
+		super();
 		verifyHomePage();
 	}
 
+	// Verifying if driver handle reached home page
 	public void verifyHomePage() throws NoSuchWindowException {
 		
 		try {
 			if (homePage().isDisplayed()) {
+				
 				System.out.println("User is on Home page");
 			}
 			else {
-				System.out.println("Switching driver handle to default window in case it is focused on frame.");
-//				WebSetup.driver.switchTo().defaultContent();
+				System.out.println("There is some issue with the navigation. Refreshing the page.");
+				
+				driver.navigate().refresh();
 				}
 		}catch(NoSuchWindowException nswe) {
 			nswe.printStackTrace();
@@ -51,16 +61,16 @@ public class HomePage {
 	// ******** Element locators listed below for the Home page - are used by methods above ********
 	private WebElement homePage() {
 		
-		return WebSetup.driver.findElement(By.xpath("//*[text()='Midtrans Pillow']"));
+		return driver.findElement(By.xpath("//*[text()='Midtrans Pillow']"));
 	}
 
 	private WebElement buyNowButton() {
 		
-		return WebSetup.driver.findElement(By.xpath("//*[@class='btn buy']"));
+		return driver.findElement(By.xpath("//*[@class='btn buy']"));
 	}
 	
 	private WebElement thankyouMessage() {
 		
-		return WebSetup.driver.findElement(By.xpath("//*[text()='Thank you for your purchase.']"));
+		return driver.findElement(By.xpath("//*[text()='Thank you for your purchase.']"));
 	}
 }

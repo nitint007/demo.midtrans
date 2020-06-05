@@ -3,6 +3,9 @@
  */
 package pageobjects;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -13,13 +16,16 @@ import setup.WebSetup;
  * @author nitinthite
  *
  */
-public class OrderSummary {
+public class OrderSummary extends WebSetup {
 	
-	public OrderSummary () {
+	// Class constructor to initialising same properties as parent constructor
+	public OrderSummary () throws FileNotFoundException, IOException {
 		
+		super();
 		assertOrderSummary();
 	}
 
+	// Making sure if driver reached to intended page
 	public void assertOrderSummary() {
 		
 		switchToOrderSummaryFrame();
@@ -28,7 +34,7 @@ public class OrderSummary {
 	
 	public void switchToOrderSummaryFrame() {
 		
-		WebSetup.driver.switchTo().frame(orderSummaryFrame());
+		driver.switchTo().frame(orderSummaryFrame());
 		System.out.println("*** Switched to Order Summary iFrame");
 	}
 
@@ -41,17 +47,17 @@ public class OrderSummary {
 	// ******** Element locators listed below for the Order Summary - are used by methods above ********
 	private WebElement orderSummaryFrame() {
 		
-		return WebSetup.driver.findElement(By.id("snap-midtrans"));
+		return driver.findElement(By.id("snap-midtrans"));
 	}
 	
 	private WebElement orderSummary() {
 		
-		return WebSetup.driver.findElement(By.xpath("//*[text()='Order Summary']"));
+		return driver.findElement(By.xpath("//*[text()='Order Summary']"));
 	}
 
 	private WebElement continueButton() {
 
-		return WebSetup.driver.findElement(By.xpath("//a[@class='button-main-content']"));
+		return driver.findElement(By.xpath("//a[@class='button-main-content']"));
 	}
 
 }
