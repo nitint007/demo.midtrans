@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import setup.WebSetup;
@@ -16,8 +17,8 @@ import setup.WebSetup;
  * @author nitinthite
  *
  */
-public class CreditCardPayment extends WebSetup{
-	
+public class CreditCardPayment extends WebSetup {
+
 	// Initialising objects mentioned in parent class constructor
 	public CreditCardPayment() throws FileNotFoundException, IOException {
 
@@ -29,8 +30,8 @@ public class CreditCardPayment extends WebSetup{
 	public void assertCreditCardPaymentDisplayed() {
 
 		Assert.assertTrue("*** Credit Card input fields NOT displayed", creditCardPaymentTitle().isDisplayed());
-		
-		System.out.println("User On :"+creditCardPaymentTitle().getText());
+
+		System.out.println("User On :" + creditCardPaymentTitle().getText());
 	}
 
 	public void importantMessageDisaplyed() {
@@ -48,38 +49,45 @@ public class CreditCardPayment extends WebSetup{
 		enterCardDetails(cvv, creditCardCVVInputField());
 	}
 
-	public void clickPayNowButton() {
-		
+	public void clickPayNowButton() throws NoSuchElementException {
+
+		try {
 			if (payNowButton().isEnabled()) {
 				
 				payNowButton().click();
-			}
-			else {
+			} 
+			else if (invalidCardDetailsMessage().isDisplayed()) {
 				
-				System.out.println("*** Pay Now button is not Enabled");
-				invalidCardMessage();
-			}
+				System.out.println("*!*!* Invalid card  - navigating user to Home Page");
+				driver.navigate().back();
+				driver.navigate().refresh();
+				
+			} 
+		} catch (NoSuchElementException nse) {
+			nse.printStackTrace();
+			if (invalidCardDetailsMessage().isDisplayed()) {
+			driver.navigate().back();
+			driver.navigate().refresh();}
+			throw new RuntimeException("* * * * * Issue with proceeding with scenario execution!!!");
+		}
 	}
-	
+
 	// Method to check if Invalid Card Message displayed
 	private void invalidCardMessage() {
-		
-			if(invalidCardDetailsMessage().isDisplayed())
-			{
-				System.out.println("Message displayed on entering card number : "+invalidCardDetailsMessage().getText());
-				System.out.println("Invalid card details - navigating to Home page");
-				driver.navigate().refresh();
-			}
-			else {
-				System.out.println("Invalid card details message NOT displayed");
-			}
+
+		if (invalidCardDetailsMessage().isDisplayed()) {
+			System.out.println("Message displayed on entering card number : " + invalidCardDetailsMessage().getText());
+			System.out.println("Invalid card details - navigating to Home page");
+			driver.navigate().refresh();
+		} else {
+			System.out.println("Invalid card details message NOT displayed");
+		}
 	}
-	
+
 	// Method to enter card details
 	private void enterCardDetails(String cardDetail, WebElement element) {
 
-		Assert.assertTrue("*** Credit card number field not displayed",
-				element.isDisplayed());
+		Assert.assertTrue("*** Credit card number field not displayed", element.isDisplayed());
 
 		// Steps for entering credit card number
 		element.click();
@@ -126,7 +134,7 @@ public class CreditCardPayment extends WebSetup{
 
 		return driver.findElement(By.xpath("//*[@class='button-main-content']"));
 	}
-	
+
 	private WebElement invalidCardDetailsMessage() {
 
 		return driver.findElement(By.xpath("//*[@class='notice danger']//span"));

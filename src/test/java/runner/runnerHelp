@@ -1,0 +1,12 @@
+Runner file help doc for cucumber and extent reporting values.
+
+//plugin = { "pretty", "json:target/cucumber-reports/Cucumber.json",
+//		 "junit:target/cucumber-reports/Cucumber.xml",
+//		 "html:target/cucumber-reports"}, 
+//features="features", 
+//glue="src/test/java/stepdefinitions", 
+//monochrome=true,
+//strict=false)
+
+//plugin = {"pretty", "html:target/cucumber"}
+//plugin={"com.cucumber.listener.ExtentCucumberFormatter:target/cucumber/report.html"}

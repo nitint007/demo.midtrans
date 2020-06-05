@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebElement;
 
@@ -36,7 +37,7 @@ public class BankDetails extends WebSetup{
 		}
 	}
 
-	public void enterOTP(String otp) throws InterruptedException {
+	public void enterOTP(String otp) throws InterruptedException, NoSuchElementException {
 
 		try {
 			Thread.sleep(10000);
@@ -49,8 +50,16 @@ public class BankDetails extends WebSetup{
 
 			driver.switchTo().defaultContent();
 			System.out.println("Switched to Default content");
-		} catch (InterruptedException ie)
-		{ie.printStackTrace();}
+		} 
+		catch (InterruptedException ie)
+		{
+			ie.printStackTrace();
+		} 
+		catch (NoSuchElementException nse)
+		{
+			nse.printStackTrace();
+			throw new RuntimeException("* * * * * Issue finding element");
+		}
 	}
 
 	// ******** Element locators listed below for the Bank Details - are used by

@@ -23,6 +23,7 @@ import pageobjects.OrderSummary;
 import pageobjects.PaymentStatus;
 import pageobjects.SelectPayment;
 import setup.WebSetup;
+import util.ExtentReporter;
 
 /**
  * @author nitinthite
@@ -30,6 +31,7 @@ import setup.WebSetup;
  */
 public class Purchase extends WebSetup{
 	
+	// Classes utilised
 	HomePage homepage;
 	CartPanel cartPanel;
 	OrderSummary ordersummary;
@@ -60,6 +62,7 @@ public class Purchase extends WebSetup{
 			
 			// To close webdriver session
 			driver.quit();
+			ExtentReporter.writeExtentReport();
 		}
 	
 	//************** @Given - implementation details **************
