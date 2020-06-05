@@ -33,3 +33,10 @@ Go to /demo.midtrans/target/cucumber and open 'report.html'
 /demo.midtrans/bin/parking_lot.bat is created
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+# Executing crossbrowser
+
+Go to /demo.midtrans/src/test/resources/testDataResources/Data.properties
+Mention the one of browsers mentioned for respective variable and execute
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
