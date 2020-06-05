@@ -1,3 +1,3 @@
-#!/bin/bash 
-
-mvn test
+#!/bin/bash
+cd demo.midtrans
+mvn clean test
