@@ -26,10 +26,7 @@ public class WebSetup {
 	public static WebDriverWait wait;
 	public static Properties properties;
 	
-	
-	//Target website url for test that is fixed
-//	private static final String BASEURL = "https://demo.midtrans.com/";
-	
+	// Class constructor for initialising objects
 	public WebSetup() throws FileNotFoundException, IOException {
 		BufferedReader reader;
 		try {
