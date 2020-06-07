@@ -2,17 +2,17 @@
 Feature: Purchase a pillow
 Description: The feature should implement valid and invalid scenarios while buying a pillow.
 
-Background: 
+Background: To add pillow to cart
 Given User adds pillow to the cart
 
-@positiveBuy
-Scenario:
+@PositiveBuy
+Scenario: To check successful purchase
 When Entered valid details
 Then Purchase should be successful
 
 
-@negativeBuy
-Scenario Outline:
+@NegativeBuy
+Scenario Outline: To check un-successful purchase
 When Entered invalid details <cardNumber>
 Then Purchase should be un-successful
 

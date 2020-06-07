@@ -17,7 +17,7 @@ import cucumber.api.junit.Cucumber;
 		"junit:target/cucumber-reports/Cucumber.xml",
 		"html:target/cucumber-reports"}, 
 features = "src/test/resources/features", 
-tags = { "@Purchase" }, // available tags @Purchase, @positiveBuy, @negativeBuy
+tags = { "@Purchase" }, // available tags @Purchase, @PositiveBuy, @NegativeBuy
 glue = "stepDefinitions", 
 monochrome = true, 
 strict = false)
