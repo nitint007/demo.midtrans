@@ -28,6 +28,5 @@ strict = false)
  */
 public class TestRunner {
 	
-	
 
 }

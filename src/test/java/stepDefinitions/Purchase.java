@@ -95,8 +95,6 @@ public class Purchase extends WebSetup{
 	    selectpayment.selectCreditCardOption();
 	    
 	    payment = new CreditCardPayment();
-	    
-	    //TODO - do not hardcode
 	    payment.enterCardDetails(properties.getProperty("validCardNumber"), 
 	    		properties.getProperty("expiryDate"), properties.getProperty("cvv"));
 	    payment.importantMessageDisaplyed();
