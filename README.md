@@ -19,7 +19,11 @@ git clone https://github.com/nitint007/demo.midtrans
 
 cd demo.midtrans
 
-mvn test
+mvn test 
+
+OR (in case of multiple 'TestRunner.java' files)
+
+mvn clean test -Dsurefire.suiteJavaFiles=TestRunner.java
 
 # If fails to execute from cmd line -
 
