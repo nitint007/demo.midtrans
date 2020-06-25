@@ -19,7 +19,7 @@ git clone https://github.com/nitint007/demo.midtrans
 
 cd demo.midtrans
 
-mvn clean test
+mvn test
 
 # If fails to execute from cmd line -
 
