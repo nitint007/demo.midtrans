@@ -7,8 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import setup.WebSetup;
 
@@ -19,39 +20,39 @@ import setup.WebSetup;
  */
 public class SelectPayment extends WebSetup {
 	
+	
+	@FindBy(id = "payment-list")
+	WebElement selectPaymentPop;
+	
+	@FindBy(xpath = "//a[@href='#/credit-card']")
+	WebElement creditCardOption;
+	
+	
 	// Class constructor to initialising same properties as parent constructor
 	public SelectPayment() throws FileNotFoundException, IOException {
 		
 		super();
+		
+		PageFactory.initElements(driver, this);
+		
 		assertSelectPaymentDisplayed();
 	}
 
 	// Making sure if driver reached to intended page
 	public void assertSelectPaymentDisplayed() {
 		
-		Assert.assertTrue("*** Select Credit Card Payment not displayed", selectPaymentPop().isDisplayed());
+		Assert.assertTrue("*** Select Credit Card Payment not displayed", selectPaymentPop.isDisplayed());
 	}
 
 	public void isCreditCardOptionDisplayed() {
 		
-		Assert.assertTrue("*** Credit Card option not displayed", creditCardOption().isDisplayed());
+		Assert.assertTrue("*** Credit Card option not displayed", creditCardOption.isDisplayed());
 	}
 
 	public void selectCreditCardOption() {
 		
 		isCreditCardOptionDisplayed();
 
-		creditCardOption().click();
-	}
-
-	// ******** Element locators listed below for the SELECT PAYMENT TYPE - are used by methods above ********
-	private WebElement selectPaymentPop() {
-
-		return driver.findElement(By.id("payment-list"));
-	}
-
-	private WebElement creditCardOption() {
-
-		return driver.findElement(By.xpath("//a[@href='#/credit-card']"));
+		creditCardOption.click();
 	}
 }

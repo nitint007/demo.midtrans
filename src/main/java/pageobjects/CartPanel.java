@@ -7,8 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import setup.WebSetup;
 
@@ -18,26 +19,38 @@ import setup.WebSetup;
  */
 public class CartPanel extends WebSetup {
 	
+	@FindBy(xpath = "//*[@class='cart-head']/span[1]")
+	WebElement shoppingCartPanel;
+	
+	@FindBy(xpath = "//*[@class='cart-head']/span[2]")
+	WebElement cartItems;
+	
+	@FindBy(xpath = "//*[@class='cart-checkout']")
+	WebElement checkoutButton;
+	
 	// Initialising objects mentioned in parent class constructor
 	public CartPanel() throws FileNotFoundException, IOException {
 		
 		super();
+		
+		PageFactory.initElements(driver, this);
+		
 		assertCartPanel();
 	}
 
 	// Making sure if driver reached to intended page
 	public void assertCartPanel() {
 
-		Assert.assertTrue("*** Cart panel is not displayed", shoppingCartPanel().isDisplayed());
+		Assert.assertTrue("*** Cart panel is not displayed", shoppingCartPanel.isDisplayed());
 		
 	}
 
 	// Fetching number of items added to cart
 	public int ifCartHasItems() {
 		
-		Assert.assertTrue("*** Cart items number not displayed", cartItems().isDisplayed());
+		Assert.assertTrue("*** Cart items number not displayed", cartItems.isDisplayed());
 
-		int items = Integer.parseInt(cartItems().getText());
+		int items = Integer.parseInt(cartItems.getText());
 		
 		return items;
 	}
@@ -46,29 +59,13 @@ public class CartPanel extends WebSetup {
 		
 		if (ifCartHasItems() >= 1) {
 			
-			Assert.assertTrue("*** Checkout Button not displayed", checkoutButton().isDisplayed());
+			Assert.assertTrue("*** Checkout Button not displayed", checkoutButton.isDisplayed());
 
-			checkoutButton().click();
+			checkoutButton.click();
 		}
 		else {
 			System.out.println("*** Cart is Empty!!!");
 		}
-	}
-
-	// ******** Element locators listed below for the CART PANEL - are used by methods above ********
-	private WebElement shoppingCartPanel() {
-
-		return driver.findElement(By.xpath("//*[@class='cart-head']/span[1]"));
-	}
-
-	private WebElement cartItems() {
-
-		return driver.findElement(By.xpath("//*[@class='cart-head']/span[2]"));
-	}
-
-	private WebElement checkoutButton() {
-
-		return driver.findElement(By.xpath("//*[@class='cart-checkout']"));
 	}
 
 }

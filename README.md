@@ -2,7 +2,7 @@
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
-# Page Object model Test automation framework using Selenium with Java, Cucumber and Maven
+# Page Factory (Page Object model design pattern) Test automation framework using Selenium Webdriver with Java, Cucumber and Maven
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
